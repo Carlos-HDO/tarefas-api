@@ -15,5 +15,3 @@ PUT /api/tarefas/{id}
 
 DELETE /api/tarefas/{id}
 
-nginx
-Copiar código
