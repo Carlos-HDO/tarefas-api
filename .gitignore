@@ -1,0 +1,16 @@
+# Maven / Java
+target/
+!.mvn/wrapper/maven-wrapper.jar
+*.iml
+*.class
+.mvn/
+# IDEs
+.idea/
+.vscode/
+# SO
+.DS_Store
+Thumbs.db
+# Logs
+*.log
+# Docker/ambiente
+.env

@@ -1,0 +1,44 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: tarefas-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tarefasdb
+      MYSQL_USER: tarefas
+      MYSQL_PASSWORD: senha_forte
+      TZ: UTC
+    ports:
+      - "3306:3306"   # opcional expor para host; em CI não precisa
+    command: >
+      --default-authentication-plugin=caching_sha2_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build: .
+    container_name: tarefas-api
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: tarefasdb
+      DB_USER: tarefas
+      DB_PASSWORD: senha_forte
+    ports:
+      - "8080:8080"
+    # se quiser reiniciar sempre que cair:
+    # restart: unless-stopped
+
+volumes:
+  db_data:
